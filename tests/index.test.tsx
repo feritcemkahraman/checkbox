@@ -249,6 +249,15 @@ describe('rc-checkbox', () => {
     fireEvent.keyUp(inputEl, { which: KeyCode.TAB });
     expect(onKeyUp).toHaveBeenCalledTimes(1);
   });
+
+  it('support rootClassName', () => {
+    const { container } = render(<Checkbox rootClassName="custom-root" />);
+    const rootEl = container.querySelector('.rc-checkbox')!;
+    const inputEl = container.querySelector('input')!;
+
+    expect(rootEl.classList.contains('custom-root')).toBe(true);
+    expect(inputEl.hasAttribute('rootClassName')).toBe(false);
+  });
 });
 
 describe('Checkbox ref', () => {

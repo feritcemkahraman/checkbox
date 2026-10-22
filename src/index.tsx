@@ -21,9 +21,12 @@ export interface CheckboxRef {
   nativeElement: HTMLElement | null;
 }
 
-export interface CheckboxProps
-  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'> {
+export interface CheckboxProps extends Omit<
+  React.InputHTMLAttributes<HTMLInputElement>,
+  'onChange'
+> {
   prefixCls?: string;
+  rootClassName?: string;
   onChange?: (e: CheckboxChangeEvent) => void;
 }
 
@@ -31,6 +34,7 @@ export const Checkbox = forwardRef<CheckboxRef, CheckboxProps>((props, ref) => {
   const {
     prefixCls = 'rc-checkbox',
     className,
+    rootClassName,
     style,
     checked,
     disabled,
@@ -57,7 +61,7 @@ export const Checkbox = forwardRef<CheckboxRef, CheckboxProps>((props, ref) => {
     nativeElement: holderRef.current,
   }));
 
-  const classString = clsx(prefixCls, className, {
+  const classString = clsx(prefixCls, className, rootClassName, {
     [`${prefixCls}-checked`]: rawValue,
     [`${prefixCls}-disabled`]: disabled,
   });
