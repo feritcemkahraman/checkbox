@@ -21,12 +21,18 @@ export interface CheckboxRef {
   nativeElement: HTMLElement | null;
 }
 
+export type SemanticName = 'root' | 'input';
+
+export type CheckboxClassNames = Partial<Record<SemanticName, string>>;
+export type CheckboxStyles = Partial<Record<SemanticName, React.CSSProperties>>;
+
 export interface CheckboxProps extends Omit<
   React.InputHTMLAttributes<HTMLInputElement>,
   'onChange'
 > {
   prefixCls?: string;
-  rootClassName?: string;
+  classNames?: CheckboxClassNames;
+  styles?: CheckboxStyles;
   onChange?: (e: CheckboxChangeEvent) => void;
 }
 
@@ -34,8 +40,9 @@ export const Checkbox = forwardRef<CheckboxRef, CheckboxProps>((props, ref) => {
   const {
     prefixCls = 'rc-checkbox',
     className,
-    rootClassName,
     style,
+    classNames: checkboxClassNames,
+    styles: checkboxStyles,
     checked,
     disabled,
     defaultChecked = false,
@@ -61,10 +68,14 @@ export const Checkbox = forwardRef<CheckboxRef, CheckboxProps>((props, ref) => {
     nativeElement: holderRef.current,
   }));
 
-  const classString = clsx(prefixCls, className, rootClassName, {
+  const classString = clsx(prefixCls, className, checkboxClassNames?.root, {
     [`${prefixCls}-checked`]: rawValue,
     [`${prefixCls}-disabled`]: disabled,
   });
+
+  const rootStyle = { ...style, ...checkboxStyles?.root };
+  const inputClassString = clsx(`${prefixCls}-input`, checkboxClassNames?.input);
+  const inputStyle = checkboxStyles?.input;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (disabled) {
@@ -92,10 +103,11 @@ export const Checkbox = forwardRef<CheckboxRef, CheckboxProps>((props, ref) => {
   };
 
   return (
-    <span className={classString} title={title} style={style} ref={holderRef}>
+    <span className={classString} title={title} style={rootStyle} ref={holderRef}>
       <input
         {...inputProps}
-        className={`${prefixCls}-input`}
+        className={inputClassString}
+        style={inputStyle}
         ref={inputRef}
         onChange={handleChange}
         disabled={disabled}

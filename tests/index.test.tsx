@@ -250,13 +250,22 @@ describe('rc-checkbox', () => {
     expect(onKeyUp).toHaveBeenCalledTimes(1);
   });
 
-  it('support rootClassName', () => {
-    const { container } = render(<Checkbox rootClassName="custom-root" />);
-    const rootEl = container.querySelector('.rc-checkbox')!;
-    const inputEl = container.querySelector('input')!;
+  it('support semantic classNames and styles', () => {
+    const { container } = render(
+      <Checkbox
+        classNames={{ root: 'custom-root', input: 'custom-input' }}
+        styles={{ root: { background: 'red' }, input: { opacity: '0.5' } }}
+      />,
+    );
+    const rootEl = container.querySelector('.rc-checkbox') as HTMLElement;
+    const inputEl = container.querySelector('input') as HTMLInputElement;
 
     expect(rootEl.classList.contains('custom-root')).toBe(true);
-    expect(inputEl.hasAttribute('rootClassName')).toBe(false);
+    expect(rootEl.style.background).toBe('red');
+    expect(inputEl.classList.contains('custom-input')).toBe(true);
+    expect(inputEl.style.opacity).toBe('0.5');
+    expect(inputEl.hasAttribute('classNames')).toBe(false);
+    expect(inputEl.hasAttribute('styles')).toBe(false);
   });
 });
 
